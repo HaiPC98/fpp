@@ -1,0 +1,15 @@
+git config --global user.name "..."
+git config --global user.email "..."
+
+// check lịch sử commit: 
+git log --oneline
+
+// CHeched status: 
++) unmodified
++) modified
++) staged
+
+// 
+untracked : git add . ==> tracked : staged
+staged: git commit ==> save to repository: unmodified (editing...) ==> modified ==> git add . ==> staged
+  

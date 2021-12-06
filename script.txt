@@ -1,0 +1,91 @@
+Login -> data: {Gmail, name} -> uid(create)
+
+SaveToDB(data)
+
+
+REmote:
+
+send noti remote: (uid, date, cico)
+
+RemoteModel.findAll(where: {uid, date})
+.then:(data) 
+    -> if(!data.status_done) 
+        : if(!data.checkin) -> Model.create
+        : else Model.update({checkout: data.checkout, status_done: true})
+
+
+{
+    table_name: 
+    modal_name: 
+}
+
+
+ method: 'POST',
+headers: {
+    "Content-type": "application/json; charset=UTF-8"
+},
+body: JSON.stringify(data)
+
+===================== CRUD ++++++++++++++++++++
+UserInfo.create({
+  name: 'Jahj',
+  gmail: 'anhgog1198@gmail.com',
+}).then(result=>{
+  console.log("Jane's auto-generated", result.id, result.name, result.age);
+})
+
+UserInfo.findOne({ where: {gmail: 'anhgog1198@gmail.com'} })
+.then(function(user) {
+  console.log('user Fined...', user)
+})
+
+UserInfo.findAll({attributes: ['id', 'gmail', 'name']})
+.then(data=>{
+  console.log('find all...', data)
+})
+
+// Delete everyone named "Jane"
+User.destroy({
+  where: {
+    firstName: "Jane"
+  }
+}).then(() => {
+  console.log("Delete : Done!");
+});
+
+// Change everyone without a last name to "Doe"
+User.update({ lastName: "Doe" }, {
+  where: {
+    lastName: null
+  }
+}).then(() => {
+  console.log("Update: Done!");
+});
+
+
+// ============== APIs ========================
+app.get('/api/create', (req,res)=>{
+  
+})
+
+
+
+
+app.get("/protected", (req, res)=>{
+    res.send('This is protectted...')
+})
+
+  <th scope="col">ID</th>
+                <th scope="col">UserName</th>
+                <th scope="col">Gmail</th>
+                <th scope="col">FullName</th>
+                <th scope="col">Loại NV</th>
+                <th scope="col">Ngày tạo</th>
+
+<button type="button" class="btn btn-primary" data-toggle="modal"
+    data-target="#modalPoll-1">Export File</button>
+
+thống kê:
+    
+công : theo ngày(day)
+       theo nhân viên(uid)

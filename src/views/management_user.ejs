@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/manage.css">
+</head>
+
+<body>
+
+    <div class="container-sm">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">Admin Page</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+                    aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarScroll">
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </div>
+
+                <div class="optional-statistic mx-3">
+                    Optional Statistic
+                </div>
+                
+                <div class="show-user mx-3">
+                    All User
+                </div>
+
+                <div class="fp-months cursor-pointer mx-3" id="navbar-show-fpmonth">
+                    Finger
+                </div>
+                <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Menu
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                            <li><a class="dropdown-item" href="/admin/products/create">Add New User</a></li>
+                            <li><a class="dropdown-item" href="/admin/products">Management</a></li>
+                            <li>
+
+                            </li>
+                            <li><a class="dropdown-item" href="#">Log Out</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="header mt-3" style="display: none">
+
+            <label for="exampleFormControlSelect1">Xem công</label>
+            <select class="option-statistic" id="" style="width: 200px" name="option-statistic">
+                <option>Theo ngày/tháng</option>
+                <option>Theo mã NV</option>
+            </select>
+
+            <div class="div-uid mt-3" style="display: none">
+                    <label for="dateofbirth">From</label>
+                    <input class="mx-1" type="date" name="date_from" id="date-from">
+                    <label for="dateofbirth">To</label>
+                    <input class="mx-1" type="date" name="date_to" id="date-to">
+                    <label for="dateofbirth">User ID:</label>
+                    <input class="mx-1" type="text" name="uid" id="uid" style="width:40px; height:25px">
+                    <button type="button" class=" btn-primary mx-3 " id="div-uid-submit">Ok</button>
+               
+            </div>
+
+
+        </div>
+        <table class="table my-3">
+            <thead class="thead-dark">
+                <tr class="cols">
+
+
+                </tr>
+            </thead>
+            <tbody class="tbody">
+
+            </tbody>
+        </table>
+
+        <!-- Export button -->
+        <button type="button" class="btn btn-primary show-modal-btn" style="display:none">Export File</button>
+        <!-- Modal  -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Bạn có chắc chắn muốn xóa khóa học</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Bạn có chắc muốn xóa User này
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-danger" id="delete-now" data-bs-dismiss="modal">Xóa
+                            bỏ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden form    -->
+        <form id="hidden-form" method="POST">
+        </form>
+
+        <%- include('export-file-modal') %>
+    </div>
+
+
+
+
+    <script>
+        $('.optional-statistic').click(()=>{
+            $('.header').show()
+            
+        })
+
+        $('.option-statistic').change(() => {
+            console.log('cahnged')
+            if ($('.option-statistic').val() === 'Theo ngày/tháng') {
+                // $('.div-date').show()
+                $('.div-uid').hide()
+            } else if ($('.option-statistic').val() === 'Theo mã NV') {
+                console.log($('.option-statistic').val())
+                // $('.div-date').hide()
+                $('.div-uid').show()
+            }
+        })
+
+        $('#div-uid-submit').click(()=>{
+            console.log('loi roi')
+            let payload = {
+                date_from: $('#date-from').val(),
+                date_to: $('#date-to').val(),
+                uid: $('#uid').val()
+            }
+            console.log(payload)
+            let post = {
+                method: 'POST',
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify(payload)
+            }
+            fetch('/statistic/preview', post)
+            .then(response => {
+                console.log('retuen json')
+                return response.json()
+            })
+            .then(data => {
+                console.log('dta',data)
+                if(data != null) {
+                    RenderTable(data)
+                    ExportFile(data)
+                }
+            })
+        })
+        let RenderTable = (data)=>{
+            let htmlCols, htmlRows, htmlTd, mapCols
+                    mapCols = Object.keys(data[0])
+                    mapCols.map(col => {
+                        htmlCols += ` <th scope="col">${col}</th>`
+
+                    })
+                    $('.cols').html(htmlCols)
+                    if(data.length ===0){
+                        htmlRows = ''
+                        $('.export-btn').html('')
+                    } 
+                    else{
+                        $('.show-modal-btn').show()
+
+                            data.map((row, index) => {
+                            htmlRows += `<tr class= "uid" id="${index}">`
+                            mapCols.map(col=>{
+                                console.log('rwo-col', col, row[col])
+
+                                htmlRows += `<td>${row[col]}</td>`
+                            })
+                            htmlRows += `</tr>`
+                        })
+                        // SHow modal 
+                            $('.show-modal-btn').click(() => {
+                                console.log('sdfgh ewsdzd')
+                                $('.modal.export-file').show()
+                            })
+                            $('.close').click(()=>{
+                                $('.modal.export-file').hide()
+                            })    
+                    } 
+                    $('.tbody').html(htmlRows)
+                    
+        }
+
+        let ExportFile = (file_data)=>{
+            $('.export-btn-submit').click(() => {
+                console.log('===============================DATA')
+
+                $('.modal.export-file').hide()
+
+                    let type_f = $('[name="file_type"]').val() 
+                    let file_name = $('.md-textarea.form-control').val()
+                    let return_data = {data_body:file_data, sub: {type_f, file_name}}
+
+
+                    fetch('/management-user/export', {
+                        method: 'POST',
+                        headers: {
+                        "Content-type": "application/json; charset=UTF-8"
+                        },
+                        body: JSON.stringify(return_data)
+                    }).then(response => {
+                        console.log('response......',response)
+                        return response.json()
+                    })
+                    .then(data => {
+                        alert(` Status: ${data.status}  \n Message: ${data.message}`)
+
+                    })
+                    .catch(error =>{
+                        console.log('error')
+                    })
+            })
+        }
+
+        // Fetch All 
+
+        let FetchAllFTB = async (from_tb)=>{
+            fetch(`/management-user/fetch-all/${from_tb}`)
+            .then(response =>{
+                return response.json()
+            })
+            .then(data =>{
+                console.log('dataaaaaaaaaaaaa',data)
+                RenderTable(data)
+            })
+
+            // console.log('fetch===========', fetch_data.json())
+            // RenderTable(fetch_data.json())
+        }
+
+        // Show All User 
+
+        $('.show-user').click(async ()=>{
+            await FetchAllFTB('users')
+
+        })
+        document.querySelector('#navbar-show-fpmonth').onclick = () => {
+            console.log('234567sssssss89')
+            console.log('dasdasd')
+            $('.header').html('')
+            fetch(`/getdt/fp-month`)
+                .then(response => {
+                    return response.json()
+                })
+                .then(data => {
+                    // console.log(data)
+                    let htmlCols, htmlRows, htmlTd, mapCols
+                    mapCols = data.data_col
+                    mapCols.map(col => {
+                        htmlCols += ` <th scope="col">${col}</th>`
+                        // htmlTd += `<td>${}</td>`
+                    })
+                    $('.cols').html(htmlCols)
+                    // console.log(data.data_body)
+                    mapCols.map(map_col_item => {})
+                    data.data_body.map(row => {
+
+                        console.log(htmlTd)
+                        htmlRows += ` 
+                            <tr class= "uid" id="${ row.uid}">
+                                <th scope="col">${row._id}</th>
+                                <td>${row.uid}</td>
+                                <td>${row.day}</td>
+                                <td>${row.cico_date_time}</td>
+                                <td>${row.createdAt}</td>
+                                <td>${row.updatedAt}</td>
+                            </tr>`
+                    })
+
+                    $('.tbody').html(htmlRows)
+
+                })
+
+            let data_from_view = JSON.stringify($('#hidden- input').val())
+            console.log(typeof data_from_view)
+
+            var id
+            var deleteForm = document.getElementById('hidden-form')
+            document.querySelector('.delete-btn').onclick = function (e) {
+                id = e.target.id
+                console.log('iddd', id)
+            }
+            document.getElementById('delete-now').onclick = function () {
+                console.log('iddd', id)
+                deleteForm.action = '/user/delete/' + id
+                deleteForm.submit();
+            }
+        }
+
+         
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+    </script>
+</body>
+
+</html>

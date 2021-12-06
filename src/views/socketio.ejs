@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            <h3>Realtime App</h3>
+        </div>
+       
+        <div class="card">
+           <form class="form-horizonta" method="post" action="/io">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="username" placeholder="Type your username" name="username">
+                    <div class="input-group-append">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" class="form-control" id="message" placeholder="Send new message" name="message">
+                    <div class="input-group-append">
+                    </div>
+                </div>
+                
+                <button class="btn btn-success" type="submit" id="sendMessageBtn">Send</button>
+
+           </form>
+        </div>
+
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+
+        var socket = io('http://localhost:9999');
+
+        // let socketio = io.connect('http://localhost:9999/')
+            let username = document.querySelector('#username')
+            let usernameBtn = document.querySelector('#usernameBtn')
+            let curUsername = document.querySelector('.card-header')
+
+            let message = document.querySelector('#message')
+            let messageBtn = document.querySelector('#sendMessageBtn')
+            let messageList = document.querySelector('#message-list')
+
+            messageBtn.addEventListener('click', e => {
+                console.log(message.value)
+                socket.emit('new_message', {user: username.value, message: message.value})
+                message.value = ''
+            })
+        function connect(){
+          
+
+            // socket.on('receive_message', data => {
+            //     console.log(data)
+            //     let listItem = document.createElement('li')
+            //     listItem.textContent = data.username + ': ' + data.message
+            //     listItem.classList.add('list-group-item')
+            //     messageList.appendChild(listItem)
+            // })
+        }
+        
+    </script>
+</body>
+</html>
